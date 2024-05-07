@@ -1,8 +1,11 @@
 import 'package:chat_app_for_class/authentication/sinup_screen.dart';
+import 'package:chat_app_for_class/chat/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 class login extends StatefulWidget {
   const login({super.key});
@@ -12,6 +15,21 @@ class login extends StatefulWidget {
 }
 
 class _loginState extends State<login> {
+  var emailController = TextEditingController();
+  var passwordController = TextEditingController();
+  late SharedPreferences pref;
+  bool isLogedIn = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      //await checkLoginStatus();
+      pref = await SharedPreferences.getInstance();
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,6 +86,7 @@ class _loginState extends State<login> {
             Padding(
               padding: const EdgeInsets.only(left: 30, right: 30),
               child: TextField(
+                controller: emailController,
                 decoration: InputDecoration(
                   hintText: "Email",
                   label: Text(
@@ -93,6 +112,7 @@ class _loginState extends State<login> {
             Padding(
               padding: const EdgeInsets.only(left: 30, right: 30),
               child: TextField(
+                controller: passwordController,
                 decoration: InputDecoration(
                   hintText: "Password",
                   label: Text(
@@ -130,21 +150,28 @@ class _loginState extends State<login> {
             //login Button
 
             Center(
-              child: Container(
-                height: 60,
-                width: 300,
-                decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(20)),
-                child: Center(
-                  child: Text(
-                    /// signup banner
-                    "Login",
-                    style: GoogleFonts.kronaOne(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+              child: InkWell(
+                onTap: () {
+                  login(emailController.text, passwordController.text);
+                },
+                child: Container(
+                  height: 60,
+                  width: 300,
+                  decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(20)),
+                  child: Center(
+                    child: isLogedIn
+                        ? CircularProgressIndicator()
+                        : Text(
+                            /// signup banner
+                            "Login",
+                            style: GoogleFonts.kronaOne(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
                   ),
                 ),
               ),
@@ -185,9 +212,31 @@ class _loginState extends State<login> {
 
   Future<void> login(String passedEmail, String passedPassword) async {
     try {
+      setState(() {
+        isLogedIn = true;
+      });
       FirebaseAuth auth = FirebaseAuth.instance;
       await auth.signInWithEmailAndPassword(
           email: passedEmail, password: passedPassword);
-    } catch (e) {}
+      //print("UserID: ${FirebaseAuth.instance.currentUser!.uid}");
+      // store user id in sharedpreferences
+      pref.setString("userId", auth.currentUser!.uid);
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) {
+        return HomeScreen();
+      }));
+      setState(() {
+        isLogedIn = false;
+      });
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Login Sucess")));
+    } catch (e) {
+      setState(() {
+        isLogedIn = false;
+      });
+      print("Error: $e");
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Login Failed $e")));
+    }
   }
 }

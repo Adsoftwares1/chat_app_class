@@ -245,7 +245,7 @@ class _sign_upState extends State<sign_up> {
           .showSnackBar(SnackBar(content: Text("Sign Up success")));
       Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (context) {
-        return HomeScreen();
+        return login();
       }));
     } catch (e) {
       setState(() {
