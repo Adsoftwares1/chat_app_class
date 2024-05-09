@@ -99,6 +99,7 @@ class _sign_upState extends State<sign_up> {
                         as ImageProvider<Object>,
               ),
             ),
+            
             TextButton(
                 onPressed: () {
                   showDialog(

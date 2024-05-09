@@ -1,4 +1,5 @@
 import 'package:chat_app_for_class/authentication/view/login.dart';
+import 'package:chat_app_for_class/chat/view/all_app_users.dart';
 import 'package:chat_app_for_class/chat/view/calls_screen.dart';
 import 'package:chat_app_for_class/chat/view/chat_screen.dart';
 import 'package:chat_app_for_class/chat/view/status_screen.dart';
@@ -43,7 +44,14 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(
             width: 10,
           ),
-          Icon(Icons.more),
+          InkWell(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return AllUsersList();
+              }));
+            },
+            child: Icon(Icons.more),
+          ),
           SizedBox(
             width: 10,
           ),
