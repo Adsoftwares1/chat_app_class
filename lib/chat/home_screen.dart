@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 return AllUsersList();
               }));
             },
-            child: Icon(Icons.more),
+            child: Icon(Icons.person_add),
           ),
           SizedBox(
             width: 10,

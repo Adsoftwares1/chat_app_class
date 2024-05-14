@@ -1,6 +1,7 @@
 import 'package:chat_app_for_class/authentication/sinup_screen.dart';
 import 'package:chat_app_for_class/authentication/view/login.dart';
 import 'package:chat_app_for_class/chat/home_screen.dart';
+import 'package:chat_app_for_class/chat/view/messages_screen.dart';
 import 'package:chat_app_for_class/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';

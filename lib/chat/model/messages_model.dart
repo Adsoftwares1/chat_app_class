@@ -4,7 +4,7 @@ class Message {
   String fromId;
   String message;
   String messageId;
-  String time;
+
   String toId;
 
   Message({
@@ -13,7 +13,6 @@ class Message {
     required this.fromId,
     required this.message,
     required this.messageId,
-    required this.time,
     required this.toId,
   });
 
@@ -25,7 +24,6 @@ class Message {
       fromId: json['fromId'] ?? '',
       message: json['message'] ?? '',
       messageId: json['messageId'] ?? '',
-      time: json['time'] ?? '',
       toId: json['toId'] ?? '',
     );
   }
@@ -38,7 +36,6 @@ class Message {
       'fromId': fromId,
       'message': message,
       'messageId': messageId,
-      'time': time,
       'toId': toId,
     };
   }

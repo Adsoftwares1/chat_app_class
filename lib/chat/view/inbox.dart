@@ -1,4 +1,5 @@
 import 'package:chat_app_for_class/chat/model/all_users_model.dart';
+import 'package:chat_app_for_class/chat/model/messages_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -130,20 +131,21 @@ class _InboxScreenState extends State<InboxScreen> {
       if (chatQuery1.docs.isNotEmpty) {
         final chatDocId = chatQuery1.docs.first.id;
 
+        Message messageData = Message(
+            deleteByReceiver: false,
+            deleteBySender: false,
+            fromId: FirebaseAuth.instance.currentUser!.uid,
+            message: messageController.text,
+            messageId: currentDateTime,
+            toId: widget.singleUserData.userId);
+
         // Add message to existing conversation document
         FirebaseFirestore.instance
             .collection("chats")
             .doc(chatDocId)
             .collection("messages")
             .doc(currentDateTime)
-            .set({
-          'deleteByReceiver': false,
-          'deleteBySender': false,
-          'fromId': FirebaseAuth.instance.currentUser!.uid,
-          'message': messageController.text,
-          "messageId": currentDateTime,
-          "toId": widget.singleUserData.userId,
-        });
+            .set(messageData.toJson());
       } else if (chatQuery2.docs.isNotEmpty) {
         final chatDocId = chatQuery2.docs.first.id;
 
@@ -162,12 +164,23 @@ class _InboxScreenState extends State<InboxScreen> {
           "toId": widget.singleUserData.userId,
         });
       } else {
+        // get my profile image url
+        var snapshot = await FirebaseFirestore.instance
+            .collection("users")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .get();
+        Map<String, dynamic> currentUSerData =
+            snapshot.data() as Map<String, dynamic>;
+
+        String profileImage = currentUSerData['profile_image'];
         // If conversation document doesn't exist, create a new conversation
         FirebaseFirestore.instance.collection("chats").add({
           'initiatorId': FirebaseAuth.instance.currentUser!.uid,
           'receiverId': widget.singleUserData.userId,
           'deleteBySender': false,
           'deleteByReciever': false,
+          'senderImageUrl': profileImage,
+          'reciverImageUrl': widget.singleUserData.profileImage,
         }).then((chatDocRef) {
           // Add message to newly created conversation document
           chatDocRef.collection("messages").doc(currentDateTime).set({
