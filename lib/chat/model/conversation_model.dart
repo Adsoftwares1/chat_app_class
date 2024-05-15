@@ -30,7 +30,7 @@ class Conversational {
       deleteBySender: json['deleteBySender'] ?? false,
       initiatorId: json['initiatorId'] ?? '',
       receiverId: json['receiverId'] ?? '',
-      receiverImageUrl: json['receiverImageUrl'] ?? '',
+      receiverImageUrl: json['reciverImageUrl'] ?? '',
       senderImageUrl: json['senderImageUrl'] ?? '',
       chatInitiatorName: json['chatInitiatorName'] ?? '',
       chatReciverName: json['chatReciverName'] ?? '',

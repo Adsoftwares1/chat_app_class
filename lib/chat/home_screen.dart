@@ -1,7 +1,7 @@
 import 'package:chat_app_for_class/authentication/view/login.dart';
 import 'package:chat_app_for_class/chat/view/all_app_users.dart';
 import 'package:chat_app_for_class/chat/view/calls_screen.dart';
-import 'package:chat_app_for_class/chat/view/chat_screen.dart';
+import 'package:chat_app_for_class/chat/view/conversations_screen.dart';
 import 'package:chat_app_for_class/chat/view/status_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   // my screens list
   final List<Widget> widgetOptions = <Widget>[
-    ChatScreen(),
+    ConversationScreen(),
     StatusScreen(),
     CallScreen(),
   ];

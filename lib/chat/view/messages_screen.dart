@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
 
-class ChatScreen1 extends StatefulWidget {
-  ChatScreen1();
+class MessagesSCreen extends StatefulWidget {
+  MessagesSCreen();
 
   @override
-  State<ChatScreen1> createState() => _ChatScreen1State();
+  State<MessagesSCreen> createState() => _MessagesSCreenState();
 }
 
-class _ChatScreen1State extends State<ChatScreen1> {
+class _MessagesSCreenState extends State<MessagesSCreen> {
   @override
   Widget build(BuildContext context) {
     // Define two separate streams for initiatorId and receiverId

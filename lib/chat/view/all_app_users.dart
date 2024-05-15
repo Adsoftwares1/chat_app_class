@@ -217,13 +217,13 @@ class _AllUsersListState extends State<AllUsersList> {
             "messageId": currentDateTime,
             "toId": singleUSerData.userId,
           });
+
+          messageController.clear();
         });
       }
     } catch (e) {
       print("Error sending message: $e");
       messageController.clear();
     }
-
-    messageController.clear();
   }
 }
