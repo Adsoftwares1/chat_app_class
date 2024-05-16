@@ -1,9 +1,11 @@
+import 'package:chat_app_for_class/authentication/controller/providers/authentication_provider.dart';
 import 'package:chat_app_for_class/authentication/sinup_screen.dart';
 import 'package:chat_app_for_class/chat/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,6 +22,10 @@ class _loginState extends State<login> {
   late SharedPreferences pref;
   bool isLogedIn = false;
 
+  int count = 0;
+
+  late AuthenticationProvider authenticationProvider;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -27,11 +33,15 @@ class _loginState extends State<login> {
       //await checkLoginStatus();
       pref = await SharedPreferences.getInstance();
     });
+
+    authenticationProvider =
+        Provider.of<AuthenticationProvider>(context, listen: false);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    print("Whole screen Widget Rebuild");
     return Scaffold(
       backgroundColor: Color(0xff8ACCB0),
       body: SingleChildScrollView(
@@ -148,34 +158,61 @@ class _loginState extends State<login> {
             ),
 
             //login Button
-
-            Center(
-              child: InkWell(
+            Consumer(builder: (BuildContext context,
+                AuthenticationProvider _authProvider, child) {
+              return InkWell(
                 onTap: () {
-                  login(emailController.text, passwordController.text);
+                  print("Text Widget Rebuild");
+                  //setState(() {
+
+                  _authProvider.couterAddition();
+
+                  print("counter value : ${_authProvider.counter.toString()}");
+                  //});
                 },
                 child: Container(
-                  height: 60,
-                  width: 300,
-                  decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(20)),
-                  child: Center(
-                    child: isLogedIn
-                        ? CircularProgressIndicator()
-                        : Text(
-                            /// signup banner
-                            "Login",
-                            style: GoogleFonts.kronaOne(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
+                  child: Text(
+                    _authProvider.counter.toString(),
+                    style: TextStyle(
+                      fontSize: 40,
+                    ),
                   ),
                 ),
-              ),
-            ),
+              );
+            }),
+
+            Consumer(builder: (BuildContext context,
+                AuthenticationProvider _authenticationProvider, child) {
+              return Center(
+                child: InkWell(
+                  onTap: () {
+                    //login(emailController.text, passwordController.text);
+                    _authenticationProvider.login(
+                        emailController.text, passwordController.text, context);
+                  },
+                  child: Container(
+                    height: 60,
+                    width: 300,
+                    decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Center(
+                      child: _authenticationProvider.isLoading
+                          ? CircularProgressIndicator()
+                          : Text(
+                              /// signup banner
+                              "Login",
+                              style: GoogleFonts.kronaOne(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                    ),
+                  ),
+                ),
+              );
+            }),
 
             //You already have an account? signup
             Padding(

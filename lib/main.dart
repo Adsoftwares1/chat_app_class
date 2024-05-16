@@ -1,11 +1,11 @@
-import 'package:chat_app_for_class/authentication/sinup_screen.dart';
+import 'package:chat_app_for_class/authentication/controller/providers/authentication_provider.dart';
 import 'package:chat_app_for_class/authentication/view/login.dart';
 import 'package:chat_app_for_class/chat/home_screen.dart';
-import 'package:chat_app_for_class/chat/view/messages_screen.dart';
 import 'package:chat_app_for_class/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 late SharedPreferences pref;
@@ -30,14 +30,21 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Chat App',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AuthenticationProvider>(
+            create: (_) => AuthenticationProvider()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Chat App',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home:
+            FirebaseAuth.instance.currentUser != null ? HomeScreen() : login(),
       ),
-      home: FirebaseAuth.instance.currentUser != null ? HomeScreen() : login(),
     );
   }
 }
